@@ -10,12 +10,11 @@
 #include "esp_system.h"
 #include "lwip/api.h"
 #include "lwip/sockets.h"
-#include "cencode_inc.h"
 #include "websocket.h"
 #include "interface.h"
 #include "webserver.h"
-#include "cencode_inc.h"
-#include "libsha1.h"
+#include "mbedtls/sha1.h"
+#include "mbedtls/base64.h"
 //#include <stddef.h> /* for size_t */
 
 #define TAG	"websocket"
@@ -28,32 +27,32 @@ client_t webserverclients[NBCLIENT];
 //set of socket descriptors
 fd_set readfds;
 
-void base64_encode_local(uint8_t * data, size_t length, char* output) {
-//    size_t size = ((length * 1.6f) + 1);
-    if(output) {
-        base64_encodestate _state;
-        base64_init_encodestate(&_state);
-        int len = base64_encode_block((const char *) data, length, output, &_state);
-        len = base64_encode_blockend((output + len), &_state);
-    }
-}
-
 
 /**
  * generate the key for Sec-WebSocket-Accept
  * @param clientKey char*
  * @param Output char*
  */
-void  websocketacceptKey(char* clientKey,char* Output) {
+void websocketacceptKey(char* clientKey, char* Output) {
     uint8_t sha1HashBin[20] = { 0 };
-    strcat(clientKey ,"258EAFA5-E914-47DA-95CA-C5AB0DC85B11");
-	
-    SHA1_CTX ctx;
-	
-    SHA1IInit(&ctx);
-    SHA1IUpdate(&ctx, (const unsigned char*)clientKey, strlen(clientKey));
-    SHA1IFinal(&sha1HashBin[0], &ctx);
-    base64_encode_local(sha1HashBin, 20,Output);
+    strcat(clientKey, "258EAFA5-E914-47DA-95CA-C5AB0DC85B11");
+
+    // Initialize the SHA1 context
+    mbedtls_sha1_context ctx;
+    mbedtls_sha1_init(&ctx);
+    mbedtls_sha1_starts(&ctx);
+    mbedtls_sha1_update(&ctx, (const unsigned char*)clientKey, strlen(clientKey));
+    mbedtls_sha1_finish(&ctx, sha1HashBin);
+    mbedtls_sha1_free(&ctx);
+
+    // Calculate the required output buffer size for base64 encoding
+    size_t output_size = 4 * ((sizeof(sha1HashBin) + 2) / 3);
+    size_t olen = 0;
+
+    int ret = mbedtls_base64_encode((unsigned char *)Output, output_size, &olen, sha1HashBin, sizeof(sha1HashBin));
+    if (ret != 0) {
+        // Handle the error
+    }
 }
 
 void wsclientDisconnect(int socket, uint16_t code, char * reason, size_t reasonLen) {
