@@ -46,10 +46,15 @@ jobs:
 
     - name: Build the project
       run: |
+        . ~/esp/esp-idf-v3.3.6/export.sh
         cd webpage
         bash ./generate.sh
         cd ..
         make app
+      env:
+        IDF_PATH: ~/esp/esp-idf-v3.3.6
+        IDF_TOOLS_EXPORT_CMD: ~/esp/esp-idf-v3.3.6/export.sh
+        IDF_TOOLS_INSTALL_CMD: ~/esp/esp-idf-v3.3.6/install.sh
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v2
