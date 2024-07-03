@@ -39,11 +39,6 @@ jobs:
         ./install.sh
       id: esp-idf
 
-    - name: Set up ESP-IDF environment
-      run: |
-        cd $HOME/esp/esp-idf-v3.3.6
-        . ./export.sh
-
     - name: Build the project
       run: |
         source $HOME/esp/esp-idf-v3.3.6/export.sh
