@@ -46,10 +46,8 @@ jobs:
 
     - name: Build the project
       run: |
-        . ~/esp/esp-idf-v3.3.6/export.sh
-        cd webpage
-        bash ./generate.sh
-        cd ..
+        env
+        echo "------------------"
         make app
       env:
         IDF_PATH: ~/esp/esp-idf-v3.3.6
