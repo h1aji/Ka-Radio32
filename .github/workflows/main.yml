@@ -51,7 +51,7 @@ jobs:
         cd ..
         make app
       env:
-        IDF_PATH: ${{ github.workspace }}/esp/esp-idf-v3.3.6
+        IDF_PATH: ~/esp/esp-idf-v3.3.6
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v2
