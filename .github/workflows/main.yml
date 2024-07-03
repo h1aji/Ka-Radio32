@@ -40,19 +40,14 @@ jobs:
       id: esp-idf
 
     - name: Set up ESP-IDF environment
-      run: |
-        cd ~/esp/esp-idf-v3.3.6
-        . ./export.sh
+      run: echo "source $HOME/esp/esp-idf-v3.3.6/export.sh" >> $GITHUB_ENV
 
     - name: Build the project
       run: |
-        env
-        echo "------------------"
+        source ~/esp/esp-idf-v3.3.6/export.sh
         make app
       env:
-        IDF_PATH: ~/esp/esp-idf-v3.3.6
-        IDF_TOOLS_EXPORT_CMD: ~/esp/esp-idf-v3.3.6/export.sh
-        IDF_TOOLS_INSTALL_CMD: ~/esp/esp-idf-v3.3.6/install.sh
+        IDF_PATH: $HOME/esp/esp-idf-v3.3.6
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v2
