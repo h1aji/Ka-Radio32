@@ -45,7 +45,11 @@ jobs:
         . ./export.sh
 
     - name: Build the project
-      run: bash generate.sh
+      run: |
+        cd webpage
+        bash ./generate.sh
+        cd ..
+        make app
       env:
         IDF_PATH: ${{ github.workspace }}/esp/esp-idf-v3.3.6
 
