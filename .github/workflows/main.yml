@@ -40,12 +40,12 @@ jobs:
       id: esp-idf
 
     - name: Set up ESP-IDF environment
-      run: echo "source ${{ github.workspace }}/esp/esp-idf-v3.3.6/export.sh" >> $GITHUB_ENV
+      run: |
+        cd ~/esp/esp-idf-v3.3.6
+        . ./export.sh
 
     - name: Build the project
-      run: |
-        source $GITHUB_ENV
-        idf.py build
+      run: bash generate.sh
       env:
         IDF_PATH: ${{ github.workspace }}/esp/esp-idf-v3.3.6
 
