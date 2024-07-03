@@ -1,0 +1,54 @@
+name: Ka-Radio32 CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Build ESP32 Project
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install ESP-IDF dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          git wget flex bison gperf python3 python3-pip python3-setuptools cmake ninja-build ccache libffi-dev libssl-dev dfu-util
+
+    - name: Install ESP-IDF
+      run: |
+        mkdir -p ~/esp
+        cd ~/esp
+        wget https://github.com/espressif/esp-idf/releases/download/v3.3.6/esp-idf-v3.3.6.zip
+        unzip esp-idf-v3.3.6.zip
+        rm esp-idf-v3.3.6.zip
+        cd esp-idf-v3.3.6
+        ./install.sh
+      id: esp-idf
+
+    - name: Build the project
+      run: |
+        source $HOME/esp/esp-idf-v3.3.6/export.sh
+        cd webpage
+        bash ./generate.sh
+        cd ..
+        make app
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: KaRadio32-binary
+        path: build/KaRadio32.bin
