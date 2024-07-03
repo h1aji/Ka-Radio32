@@ -40,9 +40,17 @@ void websocketacceptKey(char* clientKey, char* Output) {
     // Initialize the SHA1 context
     mbedtls_sha1_context ctx;
     mbedtls_sha1_init(&ctx);
+
+#if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(4, 0, 0)
+    mbedtls_sha1_starts_ret(&ctx);
+    mbedtls_sha1_update_ret(&ctx, (const unsigned char*)clientKey, strlen(clientKey));
+    mbedtls_sha1_finish_ret(&ctx, sha1HashBin);
+#else
     mbedtls_sha1_starts(&ctx);
     mbedtls_sha1_update(&ctx, (const unsigned char*)clientKey, strlen(clientKey));
     mbedtls_sha1_finish(&ctx, sha1HashBin);
+#endif
+
     mbedtls_sha1_free(&ctx);
 
     // Calculate the required output buffer size for base64 encoding
