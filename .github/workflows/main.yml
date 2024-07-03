@@ -41,11 +41,8 @@ jobs:
 
     - name: Build the project
       run: |
-        ls -lah $HOME/esp/esp-idf-v3.3.6/tools/idf_tools.py
         source $HOME/esp/esp-idf-v3.3.6/export.sh
         make app
-      env:
-        IDF_PATH: $HOME/esp/esp-idf-v3.3.6
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v2
