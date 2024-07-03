@@ -48,4 +48,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: KaRadio32-binary
-        path: binaries/KaRadio32.bin
+        path: build/KaRadio32.bin
