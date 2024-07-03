@@ -4,7 +4,6 @@ set(COMPONENT_SRCS
 	"addonu8g2.c"
 	"addonucg.c"
 	"app_main.c"
-	"cencode.c"
 	"ClickButtons.c"
 	"ClickEncoder.c"
 	"ClickJoystick.c"
@@ -13,7 +12,6 @@ set(COMPONENT_SRCS
 	"gpio.c"
 	"interface.c"
 	"irnec.c"
-	"libsha1.c"
 	"ntp.c"
 	"ota.c"
 	"servers.c"
@@ -29,7 +27,7 @@ set(COMPONENT_SRCS
 set(COMPONENT_ADD_INCLUDEDIRS 
 	"./include/"
 	"../webpage/"
-	
+
 	PRIV_REQUIRES wolfssl 
 )
 
